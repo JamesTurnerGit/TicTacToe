@@ -11,4 +11,5 @@ class Player
   def takeMove
     raise "please implement in a child class"
   end
+  
 end

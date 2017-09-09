@@ -32,7 +32,7 @@ describe Player do
   end
 
   describe "#takeMove" do
-    it "returns not implemented" do
+    it "raises not implemented" do
       expect{subject.takeMove}.to raise_error "please implement in a child class"
     end
   end
