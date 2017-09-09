@@ -31,6 +31,7 @@ describe Board do
     it 'requires a player' do
       expect {subject.addMove(location: 0)}.to raise_error 'player not provided'
     end
+
     it 'won\'t allow a location above 8 or below 0' do
       error = 'location out of range'
       expect{subject.addMove(player: player_one, location: -1)}.to raise_error error
