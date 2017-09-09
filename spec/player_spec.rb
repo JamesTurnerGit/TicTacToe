@@ -20,13 +20,13 @@ describe Player do
   end
 
   describe '#name' do
-    it 'returns it's name' do
+    it 'returns it\'s name' do
       expect(subject.name).to equal player_name
     end
   end
 
   describe '#symbol' do
-    it 'returns it's symbol' do
+    it 'returns it\'s symbol' do
       expect(subject.symbol).to equal player_symbol
     end
   end
