@@ -1,4 +1,5 @@
 class Board
+  attr_reader :size, :winner
 
   def initialize (empty_symbol: "", size: 3)
     @size = size - 1
@@ -17,8 +18,10 @@ class Board
     raise 'move player not provided' if player == nil
     raise 'move location not provided' if location == nil
     raise 'move location out of range' unless validLocation? location
-    return false if board[location[0]][location[1]]
+    raise 'move cannot be added after game is over' if gameWon? || full?
+    raise 'square not empty' if board[location[0]][location[1]]
     @board [location[0]][location[1]] = player
+    @winner = player if gameWon?
     true
   end
 
@@ -28,26 +31,51 @@ class Board
     board[location[0]][location[1]].symbol
   end
 
-  def gameOver?
-    return true if horizontalsWon?
-    return true if verticalsWon?
-    #return true if diagonalsWon?
-    #return true if boardFull?
-    return false
+  def gameWon?
+    horizontalsWon? || verticalsWon? || diagonalsWon?
+  end
+
+  def gameState
+    return "won" if gameWon? 
+    return "draw" if full?
+    "ongoing"
   end
 
   private
 
-  attr_reader :empty_symbol, :size
+  attr_reader :empty_symbol
 
   def verticalsWon?
-    board.each do |line|
-      return true if lineWon? line
-    end
-    return false
+    linesWon? board
   end
 
   def horizontalsWon?
+    linesWon? board.transpose
+  end
+
+  def diagonalsWon?
+    top_to_bottom_diagonal = findTopToBottomDiagonal board
+    bottom_to_top_diagonal = findTopToBottomDiagonal board.transpose.reverse
+    linesWon? [top_to_bottom_diagonal,bottom_to_top_diagonal]
+  end
+
+  def full?
+    board.flatten.compact.length == (size + 1) * (size + 1)
+  end
+
+  def findTopToBottomDiagonal board
+    result = []
+    board.each_with_index do |line,index|
+      result << line[index]
+    end
+    result
+  end
+
+  def linesWon? lines
+    lines.each do |line|
+      return true if lineWon? line
+    end
+    return false
   end
 
   def lineWon? line

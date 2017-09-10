@@ -3,7 +3,6 @@ require 'board'
 describe Board do
   let(:empty_board){[[nil,nil,nil],[nil,nil,nil],[nil,nil,nil]]}
   let(:player_one_symbol){"X"}
-  let(:bottom_left){[0,0]}
   let(:player_one){double('player_one',symbol: player_one_symbol)}
 
   describe '#creation' do
@@ -22,7 +21,7 @@ describe Board do
 
   describe '#addMove' do
     it 'stores a reference to the player in a slot' do
-      subject.addMove(player: player_one, location: bottom_left)
+      subject.addMove(player: player_one, location: [0,0])
       expect(subject.board[0][0]).to eq player_one
     end
 
@@ -45,43 +44,95 @@ describe Board do
 
 
     it 'will only allow you to move in a empty spot' do
-      expect(subject.addMove(player: player_one, location: bottom_left)).to equal true
-      expect(subject.addMove(player: player_one, location: bottom_left)).to equal false
+      error = 'square not empty'
+      expect(subject.addMove(player: player_one, location: [0,0])).to equal true
+      expect{subject.addMove(player: player_one, location: [0,0])}.to raise_error error
+
     end
 
-    xit 'will only allow you to make a move if the board isn\'t won'
+    it 'will only allow you to make a move if the board isn\'t won' do
+      error = 'move cannot be added after game is over'
+      subject.addMove(player: player_one, location: [0,0])
+      subject.addMove(player: player_one, location: [0,1])
+      subject.addMove(player: player_one, location: [0,2])
+      expect{subject.addMove(player: player_one, location: [1,1])}.to raise_error error
+    end
   end
 
-  describe '#gameOver?' do
+  describe '#gameWon?' do
     it "returns true when won" do
       subject.addMove(player: player_one, location: [0,0])
       subject.addMove(player: player_one, location: [0,1])
       subject.addMove(player: player_one, location: [0,2])
-      expect(subject.gameOver?).to equal true
+      expect(subject.gameWon?).to equal true
     end
 
-    xit "detects horizontals" do
-
+    it "detects horizontals" do
+      subject.addMove(player: player_one, location: [0,0])
+      subject.addMove(player: player_one, location: [1,0])
+      subject.addMove(player: player_one, location: [2,0])
+      expect(subject.gameWon?).to equal true
     end
-    it "detects diagonals"
-    it "returns true when full"
+
+    it "detects top to bottom diagonals" do
+      subject.addMove(player: player_one, location: [0,0])
+      subject.addMove(player: player_one, location: [1,1])
+      subject.addMove(player: player_one, location: [2,2])
+      expect(subject.gameWon?).to equal true
+    end
+
+    it "detects diagonals going the other way" do
+      subject.addMove(player: player_one, location: [0,2])
+      subject.addMove(player: player_one, location: [1,1])
+      subject.addMove(player: player_one, location: [2,0])
+      expect(subject.gameWon?).to equal true
+    end
     it "returns false otherwise" do
-      expect(subject.gameOver?).to equal false
+      expect(subject.gameWon?).to equal false
       subject.addMove(player: player_one, location: [0,1])
-      expect(subject.gameOver?).to equal false
+      expect(subject.gameWon?).to equal false
+    end
+  end
+
+  describe "gamestate" do
+    it "returns draw when full" do
+      subject.addMove(player: player_one, location: [0,0])
+      subject.addMove(player: "player_two", location: [0,1])
+      subject.addMove(player: "player_three", location: [0,2])
+      subject.addMove(player: "player_four", location: [1,0])
+      subject.addMove(player: "player_five", location: [1,1])
+      subject.addMove(player: "player_six", location: [1,2])
+      subject.addMove(player: "player_seven", location: [2,0])
+      subject.addMove(player: "player_eight", location: [2,1])
+      expect(subject.gameState).to eq "ongoing"
+      subject.addMove(player: player_one, location: [2,2])
+      expect(subject.gameState).to eq "draw"
+    end
+    it "returns won when won" do
+      subject.addMove(player: player_one, location: [0,0])
+      subject.addMove(player: player_one, location: [0,1])
+      expect(subject.gameState).to eq "ongoing"
+      subject.addMove(player: player_one, location: [0,2])
+      expect(subject.gameState).to eq "won"
     end
   end
 
   describe '#winner' do
-    it "returns the winner"
+    it "returns the winner" do
+      subject.addMove(player: player_one, location: [0,0])
+      subject.addMove(player: player_one, location: [1,0])
+      expect(subject.winner).to equal nil
+      subject.addMove(player: player_one, location: [2,0])
+      expect(subject.winner).to equal player_one
+    end
   end
 
 
   describe '#getmark' do
     it "returns the mark of whatever is at that spot in the board" do
-      expect(subject.getMark(bottom_left)).to eq ""
+      expect(subject.getMark([0,0])).to eq ""
       subject.addMove(player: player_one, location: [0,0])
-      expect(subject.getMark(bottom_left)).to eq player_one_symbol
+      expect(subject.getMark([0,0])).to eq player_one_symbol
     end
 
     it "checks range before allowing retrieval" do
