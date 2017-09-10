@@ -5,7 +5,7 @@ class Board
     @empty_symbol = empty_symbol
     @board = []
     size.times do
-      @board << [nil] * size
+      @board <<  [nil] * size
     end
   end
 
@@ -28,14 +28,36 @@ class Board
     board[location[0]][location[1]].symbol
   end
 
+  def gameOver?
+    return true if horizontalsWon?
+    return true if verticalsWon?
+    #return true if diagonalsWon?
+    #return true if boardFull?
+    return false
+  end
+
   private
 
   attr_reader :empty_symbol, :size
 
+  def verticalsWon?
+    board.each do |line|
+      return true if lineWon? line
+    end
+    return false
+  end
+
+  def horizontalsWon?
+  end
+
+  def lineWon? line
+    line.compact.length == size + 1 && line.uniq.length == 1
+  end
+
   def validLocation? location
     return false unless (location.is_a? Array) && (location.length == 2)
-    location_x_valid = location[0] < size && location[0] >= 0
-    location_y_valid = location[1] < size && location[1] >= 0
+    location_x_valid = location[0] <= size && location[0] >= 0
+    location_y_valid = location[1] <= size && location[1] >= 0
     location_x_valid && location_y_valid
   end
 end

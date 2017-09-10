@@ -39,7 +39,10 @@ describe Board do
       expect{subject.addMove(player: player_one, location: [-1,0])}.to raise_error error
       expect{subject.addMove(player: player_one, location: [4 ,0])}.to raise_error error
       expect{subject.addMove(player: player_one, location: 5)}.to raise_error error
+      expect{subject.addMove(player: player_one, location: 54)}.to raise_error error
+      expect{subject.addMove(player: player_one, location: [54])}.to raise_error error
     end
+
 
     it 'will only allow you to move in a empty spot' do
       expect(subject.addMove(player: player_one, location: bottom_left)).to equal true
@@ -49,13 +52,30 @@ describe Board do
     xit 'will only allow you to make a move if the board isn\'t won'
   end
 
+  describe '#gameOver?' do
+    it "returns true when won" do
+      subject.addMove(player: player_one, location: [0,0])
+      subject.addMove(player: player_one, location: [0,1])
+      subject.addMove(player: player_one, location: [0,2])
+      expect(subject.gameOver?).to equal true
+    end
+
+    xit "detects horizontals" do
+
+    end
+    it "detects diagonals"
+    it "returns true when full"
+    it "returns false otherwise" do
+      expect(subject.gameOver?).to equal false
+      subject.addMove(player: player_one, location: [0,1])
+      expect(subject.gameOver?).to equal false
+    end
+  end
+
   describe '#winner' do
     it "returns the winner"
   end
 
-  describe '#gameOver?' do
-    it "returns the gamestate"
-  end
 
   describe '#getmark' do
     it "returns the mark of whatever is at that spot in the board" do
