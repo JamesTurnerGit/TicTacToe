@@ -1,7 +1,7 @@
 class Board
   attr_reader :size, :winner
 
-  def initialize (empty_symbol: "", size: 3)
+  def initialize (empty_symbol: '', size: 3)
     @size = size - 1
     @empty_symbol = empty_symbol
     @board = []
@@ -25,8 +25,8 @@ class Board
     true
   end
 
-  def getMark location
-    raise 'mark location out of range' unless validLocation? location
+  def getSymbol location
+    raise 'Symbol location out of range' unless validLocation? location
     return empty_symbol if board[location[0]][location[1]] == nil
     board[location[0]][location[1]].symbol
   end
@@ -36,9 +36,9 @@ class Board
   end
 
   def gameState
-    return "won" if gameWon? 
-    return "draw" if full?
-    "ongoing"
+    return 'won' if gameWon?
+    return 'draw' if full?
+    'ongoing'
   end
 
   private
