@@ -1,15 +1,14 @@
 class Player
-  attr_reader :name, :symbol
+  attr_reader :name, :icon
 
-  def initialize (name: nil, symbol: nil)
-    raise "player not provided with a name" if name == nil
-    raise "player not provided with a symbol" if symbol == nil
+  def initialize(name: nil, icon: nil)
+    raise 'player not provided with a name' if name.nil?
+    raise 'player not provided with a icon' if icon.nil?
     @name = name
-    @symbol = symbol
+    @icon = icon
   end
 
-  def takeMove
-    raise "please implement in a child class"
+  def take_move
+    raise 'please implement in a child class'
   end
-  
 end

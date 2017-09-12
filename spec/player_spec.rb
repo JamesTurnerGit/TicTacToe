@@ -1,21 +1,23 @@
 require 'player'
 
 describe Player do
-  let(:player_name){double('player_name')}
-  let(:player_symbol){double('player_symbol')}
+  let(:player_name) { double('player_name') }
+  let(:player_icon) { double('player_icon') }
 
-  let(:subject){ Player.new(name: player_name, symbol: player_symbol)}
+  let(:subject) { Player.new(name: player_name, icon: player_icon) }
 
   describe '#creation' do
-
-    it 'creates if given a name and a symbol' do
-      expect {Player.new(name: player_name, symbol: player_symbol)}.not_to raise_error
+    it 'creates if given a name and a icon' do
+      player_config = { name: player_name, icon: player_icon }
+      expect { Player.new(player_config) }.not_to raise_error
     end
     it 'requires a name' do
-      expect {Player.new(symbol: player_symbol)}.to raise_error 'player not provided with a name'
+      error_message = 'player not provided with a name'
+      expect { Player.new(icon: player_icon) }.to raise_error error_message
     end
-    it 'requires a symbol' do
-      expect {Player.new(name: player_name)}.to raise_error 'player not provided with a symbol'
+    it 'requires a icon' do
+      error_message = 'player not provided with a icon'
+      expect { Player.new(name: player_name) }.to raise_error error_message
     end
   end
 
@@ -25,15 +27,16 @@ describe Player do
     end
   end
 
-  describe '#symbol' do
-    it 'returns it\'s symbol' do
-      expect(subject.symbol).to equal player_symbol
+  describe '#icon' do
+    it 'returns it\'s icon' do
+      expect(subject.icon).to equal player_icon
     end
   end
 
   describe '#takeMove' do
     it 'raises not implemented' do
-      expect{subject.takeMove}.to raise_error 'please implement in a child class'
+      error_message = 'please implement in a child class'
+      expect { subject.take_move }.to raise_error error_message
     end
   end
 end

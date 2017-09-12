@@ -1,12 +1,12 @@
 class Board
   attr_reader :size, :winner
 
-  def initialize (empty_symbol: '', size: 3)
+  def initialize(empty_icon: '', size: 3)
     @size = size - 1
-    @empty_symbol = empty_symbol
+    @empty_icon = empty_icon
     @board = []
     size.times do
-      @board <<  [nil] * size
+      @board << [nil] * size
     end
   end
 
@@ -14,75 +14,75 @@ class Board
     @board.clone
   end
 
-  def addMove player: nil, location: nil
-    raise 'move player not provided' if player == nil
-    raise 'move location not provided' if location == nil
-    raise 'move location out of range' unless validLocation? location
-    raise 'move cannot be added after game is over' if gameWon? || full?
+  def add_move(player: nil, location: nil)
+    raise 'move player not provided' if player.nil?
+    raise 'move location not provided' if location.nil?
+    raise 'move location out of range' unless valid_location? location
+    raise 'move cannot be added after game is over' if game_won? || full?
     raise 'square not empty' if board[location[0]][location[1]]
     @board [location[0]][location[1]] = player
-    @winner = player if gameWon?
+    @winner = player if game_won?
     true
   end
 
-  def getSymbol location
-    raise 'Symbol location out of range' unless validLocation? location
-    return empty_symbol if board[location[0]][location[1]] == nil
-    board[location[0]][location[1]].symbol
+  def get_icon(location)
+    raise 'icon location out of range' unless valid_location? location
+    return empty_icon if board[location[0]][location[1]].nil?
+    board[location[0]][location[1]].icon
   end
 
-  def gameWon?
-    horizontalsWon? || verticalsWon? || diagonalsWon?
+  def game_won?
+    horizontals_won? || verticals_won? || diagonals_won?
   end
 
-  def gameState
-    return 'won' if gameWon?
+  def game_state
+    return 'won' if game_won?
     return 'draw' if full?
     'ongoing'
   end
 
   private
 
-  attr_reader :empty_symbol
+  attr_reader :empty_icon
 
-  def verticalsWon?
-    linesWon? board
+  def verticals_won?
+    lines_won? board
   end
 
-  def horizontalsWon?
-    linesWon? board.transpose
+  def horizontals_won?
+    lines_won? board.transpose
   end
 
-  def diagonalsWon?
-    top_to_bottom_diagonal = findTopToBottomDiagonal board
-    bottom_to_top_diagonal = findTopToBottomDiagonal board.transpose.reverse
-    linesWon? [top_to_bottom_diagonal,bottom_to_top_diagonal]
+  def diagonals_won?
+    top_to_bottom_diagonal = get_bottom_to_top_diagonal board
+    bottom_to_top_diagonal = get_bottom_to_top_diagonal board.transpose.reverse
+    lines_won? [top_to_bottom_diagonal, bottom_to_top_diagonal]
   end
 
   def full?
     board.flatten.compact.length == (size + 1) * (size + 1)
   end
 
-  def findTopToBottomDiagonal board
+  def get_bottom_to_top_diagonal(board)
     result = []
-    board.each_with_index do |line,index|
+    board.each_with_index do |line, index|
       result << line[index]
     end
     result
   end
 
-  def linesWon? lines
+  def lines_won?(lines)
     lines.each do |line|
-      return true if lineWon? line
+      return true if line_won? line
     end
-    return false
+    false
   end
 
-  def lineWon? line
+  def line_won?(line)
     line.compact.length == size + 1 && line.uniq.length == 1
   end
 
-  def validLocation? location
+  def valid_location?(location)
     return false unless (location.is_a? Array) && (location.length == 2)
     location_x_valid = location[0] <= size && location[0] >= 0
     location_y_valid = location[1] <= size && location[1] >= 0
