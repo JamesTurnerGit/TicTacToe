@@ -32,15 +32,11 @@ class Game
 
   def take_move
     raise_if_game_not_in_progress
-    update_turn_order
+    turn_order.rotate!
   end
 
   private
   attr_reader :turn_order_array
-
-  def update_turn_order
-    turn_order.rotate!
-  end
 
   def raise_if_game_not_in_progress
     raise 'game not in progress' if !game_in_progress
