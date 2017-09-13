@@ -36,7 +36,7 @@ describe Player do
   describe '#takeMove' do
     it 'raises not implemented' do
       error_message = 'please implement in a child class'
-      expect { subject.take_move }.to raise_error error_message
+      expect { subject.take_move }.to raise_error NotImplementedError
     end
   end
 end

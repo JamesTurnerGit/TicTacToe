@@ -5,7 +5,8 @@ describe Game do
   let(:player_2)      {double 'player_2'}
 
   let(:board_class)   {double 'board_class', new: board}
-  let(:board)         {double 'board', add_move: nil}
+  let(:icon)          {double 'icon'}
+  let(:board)         {double 'board',get_icon: icon, add_move: nil}
   let(:subject) do
     Game.new(board_class:   board_class)
   end
@@ -65,6 +66,14 @@ describe Game do
       it 'passes current-player move to board' do
         subject.take_move
         expect(board).to have_received(:add_move).with (player_1_move)
+      end
+    end
+
+    describe '#get_icon' do
+      it 'delgates to the board' do
+        location = 'location'
+        expect(subject.get_icon(location)).to equal icon
+        expect(board).to have_received(:get_icon).with(location)
       end
     end
 

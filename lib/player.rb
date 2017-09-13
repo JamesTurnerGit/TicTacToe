@@ -9,6 +9,6 @@ class Player
   end
 
   def take_move
-    raise 'please implement in a child class'
+    raise NotImplementedError
   end
 end

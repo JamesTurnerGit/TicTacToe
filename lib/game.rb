@@ -32,6 +32,11 @@ class Game
     @turn_order.rotate!
   end
 
+  def get_icon(location)
+    raise_if_game_not_in_progress
+    board.get_icon(location)
+  end
+
   private
   attr_reader :board_class
 
