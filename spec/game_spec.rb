@@ -1,10 +1,11 @@
 require 'game'
 describe Game do
-  let(:player_1) {double 'player_1'}
-  let(:player_2) {double 'player_2'}
+  let(:player_1)      {double 'player_1', get_move: player_1_move}
+  let(:player_1_move) {double 'player 1\'s move'}
+  let(:player_2)      {double 'player_2'}
 
   let(:board_class)   {double 'board_class', new: board}
-  let(:board)         {double 'board'}
+  let(:board)         {double 'board', add_move: nil}
   let(:subject) do
     Game.new(board_class:   board_class)
   end
@@ -32,9 +33,6 @@ describe Game do
     end
     context 'trying to call methods that require game to be started' do
       let(:error_message) { 'game not in progress' }
-      it '#turn_order' do
-        expect{ subject.turn_order }.to raise_error error_message
-      end
       it '#take_move' do
         expect{ subject.take_move }.to raise_error error_message
       end
@@ -58,6 +56,18 @@ describe Game do
       subject.add_player(player_2)
       subject.new_game
     end
+
+    describe '#take_move' do
+      it 'calls get_move on current-player' do
+        subject.take_move
+        expect(player_1).to have_received(:get_move)
+      end
+      it 'passes current-player move to board' do
+        subject.take_move
+        expect(board).to have_received(:add_move).with (player_1_move)
+      end
+    end
+
     describe '#turn_order' do
       it 'starts player1, player2' do
         expect(subject.turn_order).to eq [player_1, player_2]
@@ -67,5 +77,6 @@ describe Game do
         expect(subject.turn_order).to eq [player_2, player_1]
       end
     end
+
   end
 end

@@ -2,13 +2,13 @@ require 'board'
 require 'console_output'
 
 class Game
-  attr_reader :players, :game_in_progress
+  attr_reader :players, :game_in_progress, :turn_order, :board
 
   @game_in_progress = false
-  @turn_order_array
 
   def initialize (board_class: Board)
     @players = []
+    @board_class = board_class
   end
 
   def add_player(player)
@@ -17,13 +17,9 @@ class Game
 
   def new_game(size = 3)
     raise 'not enough players' if players.length < 2
+    @board = board_class.new
     @game_in_progress = true
-    @turn_order_array = players
-  end
-
-  def turn_order
-    raise_if_game_not_in_progress
-    turn_order_array
+    @turn_order = players
   end
 
   def current_player
@@ -32,11 +28,12 @@ class Game
 
   def take_move
     raise_if_game_not_in_progress
-    turn_order.rotate!
+    board.add_move(current_player.get_move)
+    @turn_order.rotate!
   end
 
   private
-  attr_reader :turn_order_array
+  attr_reader :board_class
 
   def raise_if_game_not_in_progress
     raise 'game not in progress' if !game_in_progress
