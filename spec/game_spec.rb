@@ -1,12 +1,12 @@
 require 'game'
 describe Game do
-  let(:player_1)      {double 'player_1', get_move: player_1_move}
-  let(:player_1_move) {double 'player 1\'s move'}
-  let(:player_2)      {double 'player_2'}
+  let(:player_1)      { double 'player_1', get_move: player_1_move }
+  let(:player_1_move) { double 'player 1\'s move' }
+  let(:player_2)      { double 'player_2' }
 
-  let(:board_class)   {double 'board_class', new: board}
-  let(:icon)          {double 'icon'}
-  let(:board)         {double 'board',get_icon: icon, add_move: nil}
+  let(:board_class)   { double 'board_class', new: board }
+  let(:icon)          { double 'icon' }
+  let(:board)         { double 'board',get_icon: icon, add_move: nil }
   let(:subject) do
     Game.new(board_class:   board_class)
   end

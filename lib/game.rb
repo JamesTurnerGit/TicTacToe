@@ -1,5 +1,4 @@
 require 'board'
-require 'console_output'
 
 class Game
   attr_reader :players, :game_in_progress, :turn_order, :board
